@@ -1,0 +1,12 @@
+.split {
+    display: flex;
+}
+.split .left {
+    flex: 1;
+}
+.split .middle {
+    flex: 1;
+}
+.split .right {
+    flex: 1;
+}
