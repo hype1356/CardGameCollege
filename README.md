@@ -1,2 +1,2 @@
 # CardGameCollege
-WHY RUTH?
+Dodgy code
