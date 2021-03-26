@@ -26,16 +26,19 @@ function sendfile(f, response) {
 function checkLoggedIn(cookies, res) {
   if (cookies != null) {
     if (allowedpeople.includes(cookies[1])){
+      cont = true;
       return;
     }
   }
-  res.statusCode = 301;
+  console.log("redirecting")
+  res.statusCode = 302;
   res.setHeader('Location', '/login');
-  res.end;
+  res.end();
   //break;
 }
 
 var server = http.createServer(function (req, res) {
+  let cont = false;
   console.log(req.url);
   let url = req.url;
 
@@ -50,19 +53,21 @@ var server = http.createServer(function (req, res) {
 
   switch (req.url) {
     default:
-      if (cookies == null) {
-        if (!(allowedpeople.includes(cookies[1]))){
-          res.setHeader('Location', '/login');
-        } else {res.setHeader('Location', '/home');}
-      } else {res.setHeader('Location', '/home');}
+      if (cookies != null) {
+        if (allowedpeople.includes(cookies[1])){
+          res.setHeader('Location', '/home');
+        } else {res.setHeader('Location', '/login');}
+      } else {res.setHeader('Location', '/login');}
       res.statusCode = 301;
       res.end;
 
     case '/home':
       checkLoggedIn(cookies, res);
-      res.statusCode = 200;
-      res.setHeader('Content-Type', 'text/html');
-      sendfile('home.html', res);
+      if (cont == true) {
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'text/html');
+        sendfile('home.html', res);
+      }
       break;
 
     case '/login':
@@ -96,20 +101,20 @@ var server = http.createServer(function (req, res) {
       });
 
     case '/play':
-      checkLoggedIn(cookies);
-      res.statusCode = 200;
-      res.setHeader('Content-Type', 'text/html');
-      sendfile("html.html", res);
+      checkLoggedIn(cookies, res);
+      if (cont == true) {
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'text/html');
+        sendfile("html.html", res);
+      }
       break;
 
     case '/play/css':
-      checkLoggedIn(cookies);
       res.setHeader('Content-Type', 'text/css');
       sendfile('cs.css', res);
       break;
 
     case '/play/js':
-      checkLoggedIn(cookies);
       res.setHeader('Content-Type', 'text/js');
       sendfile('cod.js', res);
       break;
