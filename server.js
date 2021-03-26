@@ -23,33 +23,39 @@ function sendfile(f, response){
   });
 }
 
+let proceed = false;
+
 var server = http.createServer(function (req, res) {
 
   let cookies = req.headers.cookie;
+  console.log(cookies);
+  //cookie = `${cookies}`.split('=');
   try {
     cookies = cookies.split('=');
+    console.log(cookies);
   } catch {
     console.log('no cookie');
   } finally {
-    initi: try {
-      console.log(cookies);
-      if (!(allowedpeople.includes(cookies[1]))) {
-        console.log("redirect")
+    console.log(req.url);
+    if (!(req.url == "/login" || req.url == "/login/action" || req.url == '/favicon.ico')) {
+      initi: try {
+        console.log(cookies[1]);
+        if (!(allowedpeople.includes(String(cookies[1])))) {
+          console.log("redirect")
+          res.statusCode = 301;
+          res.setHeader('Location', '/login');
+          res.end();
+        } else {console.log('proc');proceed = true; break initi;}
+      } catch {
+        console.log("redirect2")
         res.statusCode = 301;
         res.setHeader('Location', '/login');
-        proceeed = false
         res.end();
-      } else {break initi;}
-    } catch {
-      console.log("redirect2")
-      res.statusCode = 301;
-      res.setHeader('Location', '/login');
-      proceeed = false
-      res.end();
+      }
     }
   }
 
-  if (proceeed == true) {
+  if (proceed == true || req.url == '/login' || req.url == '/login/action') {
     switch (req.url){
       /*
       default:
@@ -72,6 +78,11 @@ var server = http.createServer(function (req, res) {
         res.end();
         break;
       */
+      default:
+        res.statusCode = 301;
+        res.setHeader('Location', '/home');
+        res.end;
+
       case '/home':
         res.statusCode = 200;
         res.setHeader('Content-Type', 'text/html');
@@ -92,8 +103,11 @@ var server = http.createServer(function (req, res) {
           p = data[1].split('=')[1];
           console.log(n, p);
           res.statusCode = 302;
+          console.log("a");
           if (allowedpeople.includes(n)) {
+            console.log("b");
             if (accdetail[n] == p) {
+              console.log("c");
               res.setHeader('Set-Cookie', cookie.serialize('player', n));
               res.setHeader('Location', '/home')
             } else {
@@ -121,7 +135,7 @@ var server = http.createServer(function (req, res) {
         sendfile('cod.js', res);
         break;
     }
-  }  
+  }
 })
 
 server.listen(port, hostname, () => { //this is what gets printed to the _console_.
