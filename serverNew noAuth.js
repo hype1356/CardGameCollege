@@ -23,7 +23,7 @@ function sendfile(f, response) {
   });
 }
 
-function checkLoggedIn(cookies, res) {
+/*function checkLoggedIn(cookies, res) {
   if (cookies != null) {
     if (allowedpeople.includes(cookies[1])){
       return;
@@ -33,7 +33,7 @@ function checkLoggedIn(cookies, res) {
   res.setHeader('Location', '/login');
   res.end;
   //break;
-}
+}*/
 
 var server = http.createServer(function (req, res) {
   console.log(req.url);
@@ -50,16 +50,11 @@ var server = http.createServer(function (req, res) {
 
   switch (req.url) {
     default:
-      if (cookies == null) {
-        if (!(allowedpeople.includes(cookies[1]))){
-          res.setHeader('Location', '/login');
-        } else {res.setHeader('Location', '/home');}
-      } else {res.setHeader('Location', '/home');}
+      res.setHeader('Location', '/home');
       res.statusCode = 301;
       res.end;
 
     case '/home':
-      checkLoggedIn(cookies, res);
       res.statusCode = 200;
       res.setHeader('Content-Type', 'text/html');
       sendfile('home.html', res);
@@ -96,20 +91,17 @@ var server = http.createServer(function (req, res) {
       });
 
     case '/play':
-      checkLoggedIn(cookies);
       res.statusCode = 200;
       res.setHeader('Content-Type', 'text/html');
       sendfile("html.html", res);
       break;
 
     case '/play/css':
-      checkLoggedIn(cookies);
       res.setHeader('Content-Type', 'text/css');
       sendfile('cs.css', res);
       break;
 
     case '/play/js':
-      checkLoggedIn(cookies);
       res.setHeader('Content-Type', 'text/js');
       sendfile('cod.js', res);
       break;
