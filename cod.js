@@ -1,3 +1,7 @@
+const http = new XMLHttpRequest();
+
+player1name = prompt("Enter name of player 1");
+player2name = prompt("Enter name of player 2");
 //generate cards
 cards = [];
 for (i=0;i<3;i++) {
@@ -94,10 +98,14 @@ function step() { //runs once per iteration
   if (shufcards.length == 0) {
     if (player1.length > player2.length) {
       alert("PLAYER 1 WINS");
+      data = {winner: player1name, numofcards: player1.length};
     } else {
       alert("PLAYER 2 WINS");
+      data = {winner: player2name, numofcards: player2.length};
     }
-    window.location.replace("/home");
+      http.open("POST", "/play/in");
+      http.send(JSON.stringify(data));
+    //window.location.replace("/home");
   }
 }
 document.getElementById("step").addEventListener("click", function(){step()});

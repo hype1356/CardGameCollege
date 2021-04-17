@@ -105,6 +105,13 @@ var server = http.createServer(function (req, res) {
       res.setHeader('Content-Type', 'text/js');
       sendfile('cod.js', res);
       break;
+
+    case '/play/in':
+      req.setEncoding('utf-8');
+      req.on('data', chunk => {
+        console.log(chunk);
+      });
+      break;
   }
 })
 
