@@ -103,9 +103,9 @@ function step() { //runs once per iteration
       alert("PLAYER 2 WINS");
       data = {winner: player2name, numofcards: player2.length};
     }
-      http.open("POST", "/play/in");
-      http.send(JSON.stringify(data));
-    //window.location.replace("/home");
+    http.open("POST", "/play/in");
+    http.send(JSON.stringify(data));
+    window.location.replace("/home");
   }
 }
 document.getElementById("step").addEventListener("click", function(){step()});
