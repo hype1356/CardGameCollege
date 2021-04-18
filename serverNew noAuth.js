@@ -7,6 +7,22 @@ var port = 3000;
 
 let ppl = new Array();
 
+function sortOnKeys(dict) {
+
+  var sorted = [];
+  for(var key in dict) {
+      sorted[sorted.length] = key;
+  }
+  sorted.sort();
+
+  var tempDict = {};
+  for(var i = 0; i < sorted.length; i++) {
+      tempDict[sorted[i]] = dict[sorted[i]];
+  }
+
+  return tempDict;
+}
+
 let allowedpeople = ['bob', 'Matt'];
 let scores = {};
 try {
@@ -15,6 +31,7 @@ try {
 } catch {
   console.log("no files");
 }
+
 //let scores = { 'bob': 0, 'Matt': 16 }
 let accdetail = { 'bob': 'asdf', 'Matt': 'Mattsp' }
 
@@ -62,9 +79,14 @@ var server = http.createServer(function (req, res) {
       res.end;
 
     case '/home':
+      let sortscore = sortOnKeys(scores);
+      console.log(sortscore);
       res.statusCode = 200;
       res.setHeader('Content-Type', 'text/html');
       sendfile('home.html', res);
+      break;
+
+    case '/home/board':
       break;
 
     case '/login':
