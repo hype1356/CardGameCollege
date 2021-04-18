@@ -5,7 +5,22 @@
     <h1>Leaderboard:</h1>
     <ol id="leaderboard"></ol>
     <script>
+      http = new XMLHttpRequest();
       leaderboard = document.getElementById("leaderboard");
-      
+      http.open("GET", "/home/board");
+      http.responseType = "text";
+      http.onload = function() {
+        let sortscore = JSON.parse(http.response);
+        console.log(sortscore);
+        let n = 1;
+        for (i of sortscore) {
+          let item = (i[0] + ": " + i[1]);
+          var entry = document.createElement('li');
+          entry.appendChild(document.createTextNode(item));
+          leaderboard.appendChild(entry);
+        }
+      };
+      http.send();
+
     </script>
 </html>

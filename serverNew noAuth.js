@@ -8,29 +8,25 @@ var port = 3000;
 let ppl = new Array();
 
 function sortOnKeys(dict) {
-
-  var sorted = [];
-  for(var key in dict) {
-      sorted[sorted.length] = key;
-  }
-  sorted.sort();
-
-  var tempDict = {};
-  for(var i = 0; i < sorted.length; i++) {
-      tempDict[sorted[i]] = dict[sorted[i]];
-  }
-
-  return tempDict;
+  var items = Object.keys(dict).map(function(key) {
+    return [key, dict[key]];
+  });  
+  items.sort(function(first, second) {
+    return second[1] - first[1];
+  });
+  return(items.slice(0, 5));
 }
 
 let allowedpeople = ['bob', 'Matt'];
 let scores = {};
-try {
-  scores = JSON.parse(fs.readFile("score.txt", function (err) {}));
+scores = fs.readFile("score.txt","utf8",function (err, data) {
+  if (err) {
+    console.log(err);
+    return;
+  }
+  scores = JSON.parse(data);
   console.log(scores);
-} catch {
-  console.log("no files");
-}
+});
 
 //let scores = { 'bob': 0, 'Matt': 16 }
 let accdetail = { 'bob': 'asdf', 'Matt': 'Mattsp' }
@@ -79,14 +75,15 @@ var server = http.createServer(function (req, res) {
       res.end;
 
     case '/home':
-      let sortscore = sortOnKeys(scores);
-      console.log(sortscore);
       res.statusCode = 200;
       res.setHeader('Content-Type', 'text/html');
       sendfile('home.html', res);
       break;
 
     case '/home/board':
+      let sortscore = JSON.stringify(sortOnKeys(scores));
+      console.log(sortscore);
+      res.end(sortscore);
       break;
 
     case '/login':
