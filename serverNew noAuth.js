@@ -8,7 +8,14 @@ var port = 3000;
 let ppl = new Array();
 
 let allowedpeople = ['bob', 'Matt'];
-let scores = { 'bob': 0, 'Matt': 16 }
+let scores = {};
+try {
+  scores = JSON.parse(fs.readFile("score.txt", function (err) {}));
+  console.log(scores);
+} catch {
+  console.log("no files");
+}
+//let scores = { 'bob': 0, 'Matt': 16 }
 let accdetail = { 'bob': 'asdf', 'Matt': 'Mattsp' }
 
 function sendfile(f, response) {
@@ -115,7 +122,8 @@ var server = http.createServer(function (req, res) {
         let name = dat["winner"];
         let number = dat["numofcards"];
         scores[name] = number;
-        console.log(scores);
+        console.log(scores); 
+        fs.writeFile("score.txt", JSON.stringify(scores), "utf8", function(err){if (err) {console.log('could not save')}});
       });
       break;
   }
