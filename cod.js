@@ -97,10 +97,10 @@ function step() { //runs once per iteration
   document.getElementById("cdleft").innerHTML = "Cards Left: " + shufcards.length;
   if (shufcards.length == 0) {
     if (player1.length > player2.length) {
-      alert("PLAYER 1 WINS");
+      alert(player1name + " WINS");
       data = {winner: player1name, numofcards: player1.length};
     } else {
-      alert("PLAYER 2 WINS");
+      alert(player2name + " WINS");
       data = {winner: player2name, numofcards: player2.length};
     }
     http.open("POST", "/play/in");
